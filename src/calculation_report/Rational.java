@@ -3,11 +3,18 @@ package calculation_report;
 /**
  * Created by noko on 2015/09/02.
  */
-public class Rational {
+public class Rational implements Comparable<Rational> {
 
     private int num; // numerator
     private int den; // denominator
 
+    public static Rational ONE  = r(1);
+    public static Rational ZERO = r(0);
+    public static Rational NaN  = r(1, 0);
+
+    public Rational(int num) {
+        this(num, 1);
+    }
     public Rational(int numerator, int denominator) {
         int g = gcd(numerator, denominator);
         this.num = numerator / g;
@@ -20,14 +27,14 @@ public class Rational {
     }
 
     public Rational negative() {
-        return new Rational(-this.num, this.den);
+        return r(-this.num, this.den);
     }
     public Rational inverse() {
-        return new Rational(this.den, this.num);
+        return r(this.den, this.num);
     }
 
     public Rational plus(Rational other) {
-        return new Rational(
+        return r(
             this.num * other.den + other.num * this.den,
             this.den * other.den
         );
@@ -36,13 +43,19 @@ public class Rational {
         return this.plus(other.negative());
     }
     public Rational multiply(Rational other) {
-        return new Rational(
+        return r(
             this.num * other.num,
             this.den * other.den
         );
     }
+    public Rational multiply(int times) {
+        return this.multiply(new Rational(times));
+    }
     public Rational div(Rational other) {
         return multiply(other.inverse());
+    }
+    public Rational power(int times) {
+        return times == 1 ? this : this.multiply(power(times-1));
     }
 
     // return -1, 0, +1
@@ -71,7 +84,9 @@ public class Rational {
     public String toString() {
         return den == 1
             ? this.num + ""
-            : this.num + "/" + this.den;
+            : this.den == 0
+                ? "NaN"
+                : this.num + " / " + this.den;
     }
     public double toDouble() {
         return (double) this.num / this.den;
@@ -79,5 +94,12 @@ public class Rational {
 
     public int numerator() { return this.num; }
     public int denominator() { return this.den; }
+
+    public static Rational r(int n) {
+        return r(n, 1);
+    }
+    public static Rational r(int n, int d) {
+        return new Rational(n, d);
+    }
 
 }
