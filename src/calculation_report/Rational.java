@@ -41,6 +41,9 @@ public class Rational implements Comparable<Rational> {
     private static long gcd(long x, long y) {
         return y == 0 ? Math.abs(x) : gcd(y, x % y);
     }
+    private static long lcm(long x, long y) {
+        return x * y / gcd(x, y); // g * l = x * y
+    }
 
     public Rational negative() {
         return r(-this.num, this.den);
@@ -49,20 +52,39 @@ public class Rational implements Comparable<Rational> {
         return r(this.den, this.num);
     }
 
-    public Rational plus(Rational other) {
-        return r(
-            this.num * other.den + other.num * this.den,
-            this.den * other.den
+    // return a + b, staving off overflow
+    public Rational plus(Rational b) {
+        Rational a = this;
+
+        if (a.equals(ZERO)) return b;
+        if (b.equals(ZERO)) return a;
+
+        long f = gcd(a.num, b.num);
+        long g = gcd(a.den, b.den);
+        if (f == 0 || g == 0) return r (
+            a.num * b.den + b.num * a.den,
+            a.den * b.den
         );
+
+        Rational s = r (
+            (a.num / f) * (b.den / g) + (b.num / f) * (a.den / g),
+            lcm(a.den, b.den)
+        );
+
+        s.num *= f;
+        return s;
     }
+
     public Rational minus(Rational other) {
         return this.plus(other.negative());
     }
-    public Rational multiply(Rational other) {
-        return r(
-            this.num * other.num,
-            this.den * other.den
-        );
+
+    // return a * b, staving off overflow as much as possible by cross-cancellation
+    public Rational multiply(Rational b) {
+        Rational a = this;
+        Rational c = new Rational(a.num, b.den);
+        Rational d = new Rational(b.num, a.den);
+        return new Rational(c.num * d.num, c.den * d.den);
     }
     public Rational multiply(long times) {
         return this.multiply(new Rational(times));
