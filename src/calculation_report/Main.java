@@ -1,12 +1,7 @@
 package calculation_report;
 
-import groovy.lang.Closure;
-
 import static calculation_report.Rational.ONE;
 import static java.lang.Math.*;
-
-import java.util.Arrays;
-import java.util.stream.IntStream;
 
 import static calculation_report.Rational.r;
 
@@ -17,11 +12,11 @@ public class Main {
     public static void main(String[] args) {
         System.out.println(
             new NewtonMethod(
-                // sin(x) (taylor)
-                x -> sin(x).plus(r(1)),
-                // cos(x) (taylor)
-                x -> cos(x)
-            ).newtonMethod(1)
+                // f(x) = log(1+x) - 1
+                x -> myLog(x).minus(r(1)),
+                // f'(x) = 1 / (1+x)
+                x -> myLogPrime(x)
+            ).newtonMethod(0)
         );
     }
 
@@ -36,13 +31,13 @@ public class Main {
 
     public static Rational sum(NumericalSequence nth) {
         Rational sum = Rational.ZERO;
-        for (int i = 1; i <= 8; i++) {
+        for (int i = 1; i <= 3; i++) {
             sum = sum.plus(nth.apply(i));
         }
         return sum;
     }
 
-    // return log(1 + x)
+    // return log(1 + x) (= sum((-1)^(n+1) * x^n / n) )
     public static Rational myLog(Rational x) {
         return sum(
             n -> x.power(n)

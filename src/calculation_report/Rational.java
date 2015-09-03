@@ -15,6 +15,22 @@ public class Rational implements Comparable<Rational> {
     public Rational(long num) {
         this(num, 1);
     }
+    public Rational(double d) {
+        // call to this() must be first statement
+        this(((Block<Rational>) () -> {
+            String[] numstrs = String.valueOf(d).split("[.]");
+            String integer = numstrs[0];
+            String decimal;
+            long wholeVal;
+            try { decimal = numstrs[1];} catch (Exception e) { decimal = "";}
+            wholeVal = Integer.parseInt(integer + decimal);
+            long decimalDigits = (long) Math.pow(10, decimal.length());
+            return r(wholeVal, decimalDigits);
+        }).body());
+    }
+    public Rational(Rational rational) {
+        this(rational.num, rational.den);
+    }
     public Rational(long numerator, long denominator) {
         long g = gcd(numerator, denominator);
         if (g == 0) { return; }
@@ -109,4 +125,7 @@ public class Rational implements Comparable<Rational> {
         return new Rational(n, d);
     }
 
+    interface Block<T> {
+        T body();
+    }
 }
