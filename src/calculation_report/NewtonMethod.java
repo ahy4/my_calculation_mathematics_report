@@ -1,5 +1,4 @@
 package calculation_report;
-import java.math.BigInteger;
 
 import static calculation_report.Rational.r;
 
@@ -12,7 +11,7 @@ public class NewtonMethod {
     private Clojure f;
     private Clojure fPrime;
     private Rational epsilon = r(1, (int)Math.pow(2, 52));
-    private int maxIteration = 10;
+    private int maxIteration = 4;
     private Rational initialX;
     private Rational result = Rational.NaN;
 
