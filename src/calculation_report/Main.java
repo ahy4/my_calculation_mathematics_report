@@ -10,26 +10,44 @@ import static calculation_report.Rational.r;
  */
 public class Main {
     public static void main(String[] args) {
-        System.out.println(r(1.99).toDouble());
+        NewtonMethod.newtonMethodWithDouble(
+            // f(x) = x^2 + 3x + 2
+            x -> x*x*x - 3*x,
+            // f'(x) = 2x
+            x -> 3*x*x - 3,
+            1.7
+        );
+        /**
+         * 絶対誤差: -7.47754*10^-7
+         * 相対誤差: -4.31716*10^-7
+         */
+
+        NewtonMethod.newtonMethod(
+            x -> x.power(3).minus(x.multiply(3)),
+            x -> x.power(2).multiply(3).minus(r(3)),
+            1.7
+        );
+        /**
+         * 絶対誤差: -7.47753885429800410529115329528...*10^-7
+         * 相対誤差: -4.31715907040483849824607517932...*10^-7
+         */
     }
     public static void testClient01() {
-        System.out.println(
-            new NewtonMethod(
-                // f(x) = log(1+x) - 1
-                x -> myLog(x).minus(r(1)),
-                // f'(x) = 1 / (1+x)
-                x -> myLogPrime(x)
-            ).newtonMethod(0)
+        NewtonMethod.newtonMethod(
+            // f(x) = log(1+x) - 1
+            x -> myLog(x).minus(r(1)),
+            // f'(x) = 1 / (1+x)
+            x -> myLogPrime(x),
+            0
         );
     }
     public static void testClient02() {
-        System.out.println(
-            new NewtonMethod(
-                // f(x) = log(1+x) - 1
-                x -> r(myLog(x).minus(r(1)).toDouble()),
-                // f'(x) = 1 / (1+x)
-                x -> r((myLogPrime(x)).toDouble())
-            ).newtonMethod(0)
+        NewtonMethod.newtonMethod(
+            // f(x) = log(1+x) - 1
+            x -> r(myLog(x).minus(r(1)).toDouble()),
+            // f'(x) = 1 / (1+x)
+            x -> r((myLogPrime(x)).toDouble()),
+            0
         );
     }
 

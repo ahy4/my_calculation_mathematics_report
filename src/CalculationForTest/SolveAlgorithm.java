@@ -18,12 +18,11 @@ public class SolveAlgorithm {
 
     public static void main(String[] args) {
         SolveAlgorithm s = new SolveAlgorithm(
-            1.0e-12, 200,
-            //(x) -> x*x*x*x - 13.0/2*x*x*x + 15*x*x - 14*x + 4,
-            (x) -> 4*x*x*x - 39.0/2*x*x   + 30*x   - 14,
-            (x) -> 12 *x*x - 39*x         * 30
+            0.00001, 4,
+            (x) -> x*x + 3*x + 2,
+            (x) -> 2*x + 3
         );
-        System.out.println(s.rSecant(-2));
+        System.out.println(s.newton(0));
     }
 
     SolveAlgorithm(double eps, int max, Function<Double, Double> f, Function<Double, Double> df) {

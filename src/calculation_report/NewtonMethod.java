@@ -1,5 +1,6 @@
 package calculation_report;
 
+import static calculation_report.Rational.ZERO;
 import static calculation_report.Rational.r;
 
 /**
@@ -8,43 +9,38 @@ import static calculation_report.Rational.r;
 
 public class NewtonMethod {
 
-    private Clojure f;
-    private Clojure fPrime;
-    private Rational epsilon = r(1, (int)Math.pow(2, 52));
-    private int maxIteration = 7;
-    private Rational initialX;
-    private Rational result = Rational.NaN;
+    private static Rational epsilon = r(1, (int)Math.pow(2, 52));
+    private static double eps = epsilon.toDouble();
+    private static int maxIteration = 7;
+    private static Rational initialX;
 
-    public NewtonMethod(Clojure f, Clojure fPrime) {
-        this.f = f;
-        this.fPrime = fPrime;
-    }
-
-    public Rational newtonMethod(int initialX) {
+    public static Rational newtonMethod(Clojure f, Clojure fPrime, double initialX) {
         Rational x = r(initialX);
         for (int i = 0; isOkCondition(x, i); i++) {
             System.out.println(x);
             x = x.minus(f.apply(x).div(fPrime.apply(x)));
         }
-        result = x;
         return x;
     }
-    private boolean isOkCondition(Rational x, int i) {
-        return i < maxIteration;
-    }
+    public static double newtonMethodWithDouble
+        (DoubleClojure g, DoubleClojure gPrime, double initialX) {
 
-    public String toString() {
-        return result.toString();
+        double x = initialX;
+        for (int i = 0; isOkCondition(ZERO, i); i++) {
+            System.out.println(x);
+            x = x - g.apply(x) / gPrime.apply(x);
+        }
+        return x;
     }
-    public double toDouble() {
-        return result.toDouble();
-    }
-    public Rational result() {
-        return result;
+    private static boolean isOkCondition(Rational x, int i) {
+        return i < maxIteration;
     }
 
     interface Clojure {
         Rational apply(Rational x);
+    }
+    interface DoubleClojure {
+        double apply(double x);
     }
 
 }

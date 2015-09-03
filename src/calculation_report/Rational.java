@@ -18,11 +18,12 @@ public class Rational implements Comparable<Rational> {
     public Rational(double d) {
         // call to this() must be first statement
         this(((Block<Rational>) () -> {
+            if (Double.isNaN(d)) return NaN;
             String[] numstrs = String.valueOf(d).split("[.]");
-            String integer = numstrs[0].equals("-0") ? "" : numstrs[0].equals("0") ? "": numstrs[0];
+            String integer = numstrs[0].equals("-0") ? "-" : numstrs[0].equals("0") ? "": numstrs[0];
             String decimal = numstrs[1].equals("0") ? "" : numstrs[1];
             long wholeVal;
-            wholeVal = Integer.parseInt((integer + decimal).equals("") ? "0" : integer + decimal);
+            wholeVal = Long.parseLong((integer + decimal).equals("") ? "0" : integer + decimal);
             long decimalDigits = (long) Math.pow(10, decimal.length());
             return r(wholeVal, decimalDigits);
         }).body());
