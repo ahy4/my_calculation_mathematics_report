@@ -19,11 +19,10 @@ public class Rational implements Comparable<Rational> {
         // call to this() must be first statement
         this(((Block<Rational>) () -> {
             String[] numstrs = String.valueOf(d).split("[.]");
-            String integer = numstrs[0];
-            String decimal;
+            String integer = numstrs[0].equals("-0") ? "" : numstrs[0].equals("0") ? "": numstrs[0];
+            String decimal = numstrs[1].equals("0") ? "" : numstrs[1];
             long wholeVal;
-            try { decimal = numstrs[1];} catch (Exception e) { decimal = "";}
-            wholeVal = Integer.parseInt(integer + decimal);
+            wholeVal = Integer.parseInt((integer + decimal).equals("") ? "0" : integer + decimal);
             long decimalDigits = (long) Math.pow(10, decimal.length());
             return r(wholeVal, decimalDigits);
         }).body());
@@ -118,6 +117,9 @@ public class Rational implements Comparable<Rational> {
     public long numerator() { return this.num; }
     public long denominator() { return this.den; }
 
+    public static Rational r(double d) {
+        return new Rational(d);
+    }
     public static Rational r(long n) {
         return r(n, 1);
     }

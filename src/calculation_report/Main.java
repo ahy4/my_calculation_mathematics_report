@@ -10,12 +10,25 @@ import static calculation_report.Rational.r;
  */
 public class Main {
     public static void main(String[] args) {
+        System.out.println(r(1.99).toDouble());
+    }
+    public static void testClient01() {
         System.out.println(
             new NewtonMethod(
                 // f(x) = log(1+x) - 1
                 x -> myLog(x).minus(r(1)),
                 // f'(x) = 1 / (1+x)
                 x -> myLogPrime(x)
+            ).newtonMethod(0)
+        );
+    }
+    public static void testClient02() {
+        System.out.println(
+            new NewtonMethod(
+                // f(x) = log(1+x) - 1
+                x -> r(myLog(x).minus(r(1)).toDouble()),
+                // f'(x) = 1 / (1+x)
+                x -> r((myLogPrime(x)).toDouble())
             ).newtonMethod(0)
         );
     }
