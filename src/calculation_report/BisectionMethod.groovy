@@ -1,7 +1,5 @@
 package calculation_report
 
-import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
 
 /**
  * Created by noko on 2015/09/09.
@@ -9,8 +7,36 @@ import java.lang.reflect.Type
 
 public class BisectionMethod {
 
+    /**
+     * it is max iteration count for bisection method
+     */
     private static int maxIteration = 40;
 
+    /**
+     * setter for maxIteration
+     * @param  n  iteration max count
+     */
+    public static void maxIteration(int n) {
+        maxIteration = n;
+    }
+
+    /**
+     * show bisection method's results come by `f(x) = 0`.
+     * search an answer between params.left and params.right
+     *
+     * sample: (java8)
+     *     BisectionMethod.execute(
+     *         Double.class,
+     *         x -> Math.sin(x) - Math.sin(2*x),
+     *         0, Math.PI / 2
+     *     );
+     *
+     * @param {Class<T>}   klass it is come by java language problem. sorry. (we cannot use `new T(2)` with generics)
+     *                           please input [Type.class] that you want to use
+     * @param {Clojure<T>} f     f(x). please use lambda expression(^java8) or closure(groovy) etc
+     * @param {double}     left  start leftX_0  point
+     * @param {double}     right start rightX_0 point (leftX_0 < rightX_0)
+     */
     public static <T> void execute(Class<T> klass, Clojure<T> f, double left, double right) {
         T middle
         T zero, two
@@ -21,26 +47,24 @@ public class BisectionMethod {
             leftBound = klass.newInstance([left] as Object[])
             rightBound = klass.newInstance([right] as Object[])
         } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e)
         }
 
-        for (int i = 0; isOkCondition(i); i++) {
-            middle = (leftBound + rightBound) / two;
-            println middle
+
+        (1..maxIteration).forEach {
+            middle = (leftBound + rightBound) / two
             if (f.apply(leftBound) * f.apply(middle) >= zero) {
-                leftBound = middle;
+                leftBound = middle
             } else {
-                rightBound = middle;
+                rightBound = middle
             }
+            println "BisectionMethod |  times: " + it + ", " + "answer: " + middle
         }
-    }
-
-    private static boolean isOkCondition(int i) {
-        return i < maxIteration;
+        println ""
     }
 
     interface Clojure<T> {
-        T apply(T x);
+        T apply(T x)
     }
 
 }

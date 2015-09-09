@@ -8,12 +8,12 @@ public class Rational implements Comparable<Rational> {
     private long num; // numerator
     private long den; // denominator
 
-    public static Rational ONE  = r(1);
-    public static Rational ZERO = r(0);
-    public static Rational NaN  = r(1, 0);
+    public static final Rational ONE  = r(1);
+    public static final Rational ZERO = r(0);
+    public static final Rational NaN  = r(1, 0);
 
     /**
-     * create rational object.
+     * create a rational object.
      * [ numerator / denominator ]
      * @param  numerator    fraction's child number
      * @param  denominator  fraction's mother number
@@ -27,7 +27,7 @@ public class Rational implements Comparable<Rational> {
     }
 
     /**
-     * create rational object.
+     * create a rational object.
      * [ num / 1 ]
      * @param  num value of this rational object
      */
@@ -36,7 +36,7 @@ public class Rational implements Comparable<Rational> {
     }
 
     /**
-     * create rational object parsed by double value.
+     * create a rational object parsed by double value.
      * ex.
      *   d = 12.33 -> [ 1233 / 100 ]
      *   d = 12.34 -> [ 617 / 50 ]
@@ -60,7 +60,7 @@ public class Rational implements Comparable<Rational> {
     }
 
     /**
-     * clone rational object.
+     * clone a rational object.
      * [ num / 1 ]
      * @param  rational rational object
      */
@@ -72,9 +72,9 @@ public class Rational implements Comparable<Rational> {
     private static long gcd(long x, long y) {
         return y == 0 ? Math.abs(x) : gcd(y, x % y);
     }
-    // return lcm(x, y)
+    // return lcm(|x|, |y|)
     private static long lcm(long x, long y) {
-        return x * y / gcd(x, y); // g * l = x * y
+        return Math.abs(x * y) / gcd(x, y); // g * l = x * y
     }
 
     /**
@@ -92,7 +92,7 @@ public class Rational implements Comparable<Rational> {
     }
 
     /**
-     * add both rational objects staving off overflow
+     * add both rational objects. staving off overflow
      * @param  b other rational object
      * @return a + b (a: this, b: other)
      */
@@ -128,7 +128,7 @@ public class Rational implements Comparable<Rational> {
     }
 
     /**
-     * multiply both rational objects staving off overflow as much as possible by cross-cancellation
+     * multiply both rational objects. staving off overflow as much as possible by cross-cancellation
      * @param  b other rational object
      * @return a * b (a: this, b: other)
      */
@@ -268,7 +268,7 @@ public class Rational implements Comparable<Rational> {
     public long denominator() { return this.den; }
 
     /**
-     * [shortcut] create rational object
+     * [shortcut] create a rational object (factory method)
      * @param  d double value
      * @return new rational object by argument
      */
@@ -277,7 +277,7 @@ public class Rational implements Comparable<Rational> {
     }
 
     /**
-     * [shortcut] create rational object
+     * [shortcut] create a rational object (factory method)
      * @param  n integer value
      * @return [ n / 1 ]
      */
@@ -286,7 +286,7 @@ public class Rational implements Comparable<Rational> {
     }
 
     /**
-     * [shortcut] create rational object
+     * [shortcut] create a rational object (factory method)
      * @param  n child  value
      * @param  d mother value
      * @return [ n / d ]

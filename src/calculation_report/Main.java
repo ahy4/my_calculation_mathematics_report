@@ -1,5 +1,7 @@
 package calculation_report;
 
+import java.math.BigDecimal;
+
 import static java.lang.Math.*;
 
 import static calculation_report.Rational.r;
@@ -11,7 +13,7 @@ import static calculation_report.BigRational.br;
 public class Main {
 
     public static void main(String[] args) {
-        testClient01();
+        testClient03();
     }
 
 
@@ -80,7 +82,6 @@ public class Main {
          * 最大
          * 4.845013279464183*10^-13
          */
-
         NewtonMethod.newtonMethod(
             x -> x.power(3).minus(x.multiply(3)),
             x -> x.power(2).multiply(3).minus(br(3)),
@@ -102,6 +103,12 @@ public class Main {
          * 1.1043197247885102986657372421813901899159*10^-99
          * 6.375792903780598611194877828234296739732*10^-100
          */
+
+        NewtonMethod.newtonMethod(
+            x -> x.pow(3).subtract(x.multiply(new BigDecimal(3))),
+            x -> x.pow(2).multiply(new BigDecimal(3)).subtract(new BigDecimal(3)),
+            new BigDecimal(1.7)
+        );
     }
 
     public static void testClient05() {

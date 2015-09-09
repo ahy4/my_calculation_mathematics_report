@@ -1,20 +1,22 @@
 package calculation_report
 
-import java.util.stream.IntStream;
 
 /**
  * Created by noko on 2015/09/03.
+ */
+
+/**
+ * usage is similar to Rational type.
  */
 public class BigRational implements Comparable<BigRational> {
 
     private BigInteger num // numerator
     private BigInteger den // denominator
-    Integer a;
 
     public static BigRational ONE  = br 1
     public static BigRational ZERO = br 0
     public static BigRational NaN  = br 1, 0
-    
+
     public BigRational(BigInteger numerator, BigInteger denominator) {
         BigInteger g = gcd numerator, denominator
         if (isZero(g)) g = 1
@@ -117,11 +119,11 @@ public class BigRational implements Comparable<BigRational> {
         (double) this.num.divide(this.den)
     }
 
-    public BigInteger numerator() { this.num; }
-    public BigInteger denominator() { this.den; }
+    public BigInteger numerator() { this.num }
+    public BigInteger denominator() { this.den }
 
     public static BigRational br(double d) {
-        return new BigRational(d);
+        return new BigRational(d)
     }
     public static BigRational br(int n) {
         br n, 1
