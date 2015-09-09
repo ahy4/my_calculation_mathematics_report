@@ -1,8 +1,5 @@
 package calculation_report;
 
-import CalculationForTest.BaseConversion;
-
-import static calculation_report.Rational.ONE;
 import static java.lang.Math.*;
 
 import static calculation_report.Rational.r;
@@ -14,30 +11,26 @@ import static calculation_report.BigRational.br;
 public class Main {
 
     public static void main(String[] args) {
-        BisectionMethod.execute(
-            BigRational.class,
-            x -> x.power(3).minus(x.multiply(3)),
-            1, 2
-        );
+        testClient01();
     }
 
 
     public static void testClient01() {
         NewtonMethod.newtonMethod(
             // f(x) = log(1+x) - 1
-            x -> myLog(x).minus(r(1)),
+            x -> myLog(x).minus(br(1)),
             // f'(x) = 1 / (1+x)
             x -> myLogPrime(x),
-            r(0)
+            br(0)
         );
     }
     public static void testClient02() {
         NewtonMethod.newtonMethod(
             // f(x) = log(1+x) - 1
-            x -> r(myLog(x).minus(r(1)).toDouble()),
+            x -> br(myLog(x).minus(br(1)).toDouble()),
             // f'(x) = 1 / (1+x)
-            x -> r((myLogPrime(x)).toDouble()),
-            r(0)
+            x -> br((myLogPrime(x)).toDouble()),
+            br(0)
         );
     }
 
@@ -111,6 +104,23 @@ public class Main {
          */
     }
 
+    public static void testClient05() {
+        BisectionMethod.execute(
+            BigRational.class,
+            // f(x) = log(1+x) - 1
+            x -> myLog(x).minus(br(1)),
+            1, 2
+        );
+    }
+
+    public static void testClient04() {
+        BisectionMethod.execute(
+            BigRational.class,
+            x -> x.power(3).minus(x.multiply(3)),
+            1, 2
+        );
+    }
+
     public static long factorial(long n) {
         long fact = 1;
         for (int i = 1; i <= n; i++) {
@@ -120,43 +130,32 @@ public class Main {
 //        return n == 0 ? 1 : n * factorial(n-1);
     }
 
-    public static Rational sum(NumericalSequence nth) {
-        Rational sum = Rational.ZERO;
-        for (int i = 1; i <= 3; i++) {
+    public static BigRational sum(NumericalSequence nth) {
+        BigRational sum = BigRational.ZERO;
+        for (int i = 1; i <= 8; i++) {
             sum = sum.plus(nth.apply(i));
         }
         return sum;
     }
 
     // return log(1 + x) (= sum((-1)^(n+1) * x^n / n) )
-    public static Rational myLog(Rational x) {
-        return sum(
-            n -> x.power(n)
-                .multiply(r(
-                    (long) pow(-1, n + 1),
-                    n
-                ))
+    public static BigRational myLog(BigRational x) {
+        return sum ( n ->
+            x.power(n)
+            .multiply(br(
+                n % 2 == 0 ? -1 : +1, // (-1)^(n+1), (int) pow(-1, n + 1)
+                n
+            ))
         );
     }
 
     // return 1 / (1 + x)
-    public static Rational myLogPrime(Rational x) {
-        return x.plus(ONE).inverse();
+    public static BigRational myLogPrime(BigRational x) {
+        return x.plus(BigRational.ONE).inverse();
     }
-
-    public static Rational sin(Rational x) {
-        return sum(i -> x.power(2 * i - 1)
-            .multiply(r((long) pow(-1, i + 1), factorial(2 * i - 1))));
-    }
-
-    public static Rational cos(Rational x) {
-        return sum(i -> x.power(2 * i - 2)
-            .multiply(r((long) pow(-1, i + 1), factorial(2 * i - 2))));
-    }
-
 
     interface NumericalSequence {
-        Rational apply(long n);
+        BigRational apply(int n);
     }
 
 }

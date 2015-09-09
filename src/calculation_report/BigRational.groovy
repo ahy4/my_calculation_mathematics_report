@@ -1,4 +1,6 @@
-package calculation_report;
+package calculation_report
+
+import java.util.stream.IntStream;
 
 /**
  * Created by noko on 2015/09/03.
@@ -7,11 +9,12 @@ public class BigRational implements Comparable<BigRational> {
 
     private BigInteger num // numerator
     private BigInteger den // denominator
+    Integer a;
 
     public static BigRational ONE  = br 1
     public static BigRational ZERO = br 0
     public static BigRational NaN  = br 1, 0
-
+    
     public BigRational(BigInteger numerator, BigInteger denominator) {
         BigInteger g = gcd numerator, denominator
         if (isZero(g)) g = 1

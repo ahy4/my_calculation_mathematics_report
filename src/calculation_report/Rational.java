@@ -12,25 +12,12 @@ public class Rational implements Comparable<Rational> {
     public static Rational ZERO = r(0);
     public static Rational NaN  = r(1, 0);
 
-    public Rational(long num) {
-        this(num, 1);
-    }
-    public Rational(double d) {
-        // call to this() must be first statement
-        this(((Block<Rational>) () -> {
-            if (Double.isNaN(d)) return NaN;
-            String[] numstrs = String.valueOf(d).split("[.]");
-            String integer = numstrs[0].equals("-0") ? "-" : numstrs[0].equals("0") ? "": numstrs[0];
-            String decimal = numstrs[1].equals("0") ? "" : numstrs[1];
-            long wholeVal;
-            wholeVal = Long.parseLong((integer + decimal).equals("") ? "0" : integer + decimal);
-            long decimalDigits = (long) Math.pow(10, decimal.length());
-            return r(wholeVal, decimalDigits);
-        }).body());
-    }
-    public Rational(Rational rational) {
-        this(rational.num, rational.den);
-    }
+    /**
+     * create rational object.
+     * [ numerator / denominator ]
+     * @param  numerator    fraction's child number
+     * @param  denominator  fraction's mother number
+     */
     public Rational(long numerator, long denominator) {
         long g = gcd(numerator, denominator);
         if (g == 0) g = 1;
@@ -39,21 +26,76 @@ public class Rational implements Comparable<Rational> {
         if (den < 0) { num *= -1; den *= -1; }
     }
 
+    /**
+     * create rational object.
+     * [ num / 1 ]
+     * @param  num value of this rational object
+     */
+    public Rational(long num) {
+        this(num, 1);
+    }
+
+    /**
+     * create rational object parsed by double value.
+     * ex.
+     *   d = 12.33 -> [ 1233 / 100 ]
+     *   d = 12.34 -> [ 617 / 50 ]
+     * @param  d value of this rational object
+     */
+    public Rational(double d) {
+        // call to this() must be first statement
+        this(((Block<Rational>) () ->
+            double2Rational(d)
+        ).body());
+    }
+    private static Rational double2Rational(double d) {
+        if (Double.isNaN(d)) return NaN;
+        String[] numstrs = String.valueOf(d).split("[.]");
+        String integer = numstrs[0].equals("-0") ? "-" : numstrs[0].equals("0") ? "": numstrs[0];
+        String decimal = numstrs[1].equals("0") ? "" : numstrs[1];
+        long wholeVal;
+        wholeVal = Long.parseLong((integer + decimal).equals("") ? "0" : integer + decimal);
+        long decimalDigits = (long) Math.pow(10, decimal.length());
+        return r(wholeVal, decimalDigits);
+    }
+
+    /**
+     * clone rational object.
+     * [ num / 1 ]
+     * @param  rational rational object
+     */
+    public Rational(Rational rational) {
+        this(rational.num, rational.den);
+    }
+
+    // return gcd(|x|, |y|)
     private static long gcd(long x, long y) {
         return y == 0 ? Math.abs(x) : gcd(y, x % y);
     }
+    // return lcm(x, y)
     private static long lcm(long x, long y) {
         return x * y / gcd(x, y); // g * l = x * y
     }
 
+    /**
+     * @return -rational
+     */
     public Rational negative() {
         return r(-this.num, this.den);
     }
+
+    /**
+     * @return 1 / rational
+     */
     public Rational inverse() {
         return r(this.den, this.num);
     }
 
-    // return a + b, staving off overflow
+    /**
+     * add both rational objects staving off overflow
+     * @param  b other rational object
+     * @return a + b (a: this, b: other)
+     */
     public Rational plus(Rational b) {
         Rational a = this;
 
@@ -76,27 +118,59 @@ public class Rational implements Comparable<Rational> {
         return s;
     }
 
+    /**
+     * subtract both rational objects
+     * @param  other rational object
+     * @return this - other
+     */
     public Rational minus(Rational other) {
         return this.plus(other.negative());
     }
 
-    // return a * b, staving off overflow as much as possible by cross-cancellation
+    /**
+     * multiply both rational objects staving off overflow as much as possible by cross-cancellation
+     * @param  b other rational object
+     * @return a * b (a: this, b: other)
+     */
     public Rational multiply(Rational b) {
         Rational a = this;
         Rational c = new Rational(a.num, b.den);
         Rational d = new Rational(b.num, a.den);
         return new Rational(c.num * d.num, c.den * d.den);
     }
+
+    /**
+     * multiply with integer value
+     * @param  times multiply num
+     * @return n * x (n: times, x: this)
+     */
     public Rational multiply(long times) {
         return this.multiply(new Rational(times));
     }
+
+    /**
+     * divide both rational objects
+     * @param  other rational object
+     * @return a / b (a: this, b: other)
+     */
     public Rational div(Rational other) {
         if (other.equals(ZERO)) return NaN;
         return multiply(other.inverse());
     }
-    public Rational div(long times) {
+
+    /**
+     * divide with integer value
+     * @param  times divide num
+     * @return x / n (n: times, x: this)
+     */    public Rational div(long times) {
         return this.div(r(times));
     }
+
+    /**
+     * multiply n times
+     * @param  times multiply times
+     * @return x ^ n (n: times, x: this)
+     */
     public Rational power(long times) {
         Rational pow = Rational.ONE;
         for (int i = 0; i < times; i++) {
@@ -106,29 +180,64 @@ public class Rational implements Comparable<Rational> {
 //        return times == 1 ? this : this.multiply(power(times-1));
     }
 
-    // return -1, 0, +1
+    /**
+     * compare this and other value.
+     * need for java
+     * @param  b other val
+     * @return -1, 0, 1 (LessThan, Equal, GreaterThan)
+     */
     public int compareTo(Rational b) {
         Rational a = this;
         long l = a.den * b.num,
             r = a.num * b.den;
         return l < r ? +1 : l > r ? -1 : 0;
     }
+
+    /**
+     * check less or not
+     * @param  other compare val
+     * @return true / false (yes, no)
+     */
     public boolean lessThan(Rational other) {
         return compareTo(other) == +1;
     }
+
+    /**
+     * check greater or not
+     * @param  other compare val
+     * @return true / false (yes, no)
+     */
     public boolean greaterThan(Rational other) {
         return compareTo(other) == -1;
     }
+
+    /**
+     * compares this rational with the specified Object for equality.
+     * @param  y compare val
+     * @return true / false (yes, no)
+     *         {@code true} if and only if the specified Object is a
+     *         Rational whose value is numerically equal to this Rational.
+     */
     public boolean equals(Object y) {
         if (y == null) return false;
         if (y.getClass() != this.getClass()) return false;
         Rational b = (Rational) y;
         return compareTo(b) == 0;
     }
+
+    /**
+     * need for java compiler
+     * @return hashcode
+     */
     public int hashCode() {
         return this.toString().hashCode();
     }
 
+    /**
+     * returns a string object representing this rational value
+     * @return rational string.
+     *         ex. [ 1 / 2 ] -> "1 / 2"
+     */
     public String toString() {
         return den == 1
             ? this.num + ""
@@ -136,19 +245,52 @@ public class Rational implements Comparable<Rational> {
             ? "NaN"
             : this.num + " / " + this.den;
     }
+
+    /**
+     * returns a double object representing this rational value
+     * @return double value by rational.
+     *         ex. [ 1 / 2 ] -> 0.5
+     */
     public double toDouble() {
         return (double) this.num / this.den;
     }
 
+    /**
+     * getter for this.num
+     * @return this.num
+     */
     public long numerator() { return this.num; }
+
+    /**
+     * getter for this.den
+     * @return this.den
+     */
     public long denominator() { return this.den; }
 
+    /**
+     * [shortcut] create rational object
+     * @param  d double value
+     * @return new rational object by argument
+     */
     public static Rational r(double d) {
         return new Rational(d);
     }
+
+    /**
+     * [shortcut] create rational object
+     * @param  n integer value
+     * @return [ n / 1 ]
+     */
     public static Rational r(long n) {
         return r(n, 1);
     }
+
+    /**
+     * [shortcut] create rational object
+     * @param  n child  value
+     * @param  d mother value
+     * @return [ n / d ]
+     */
     public static Rational r(long n, long d) {
         return new Rational(n, d);
     }
