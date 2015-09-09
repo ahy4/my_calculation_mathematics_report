@@ -1,5 +1,4 @@
 package CalculationForTest;
-import java.util.DoubleSummaryStatistics;
 import java.util.function.Function;
 
 import static java.lang.Math.*;

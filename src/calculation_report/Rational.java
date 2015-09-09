@@ -33,7 +33,7 @@ public class Rational implements Comparable<Rational> {
     }
     public Rational(long numerator, long denominator) {
         long g = gcd(numerator, denominator);
-        if (g == 0) { return; }
+        if (g == 0) g = 1;
         this.num = numerator / g;
         this.den = denominator / g;
         if (den < 0) { num *= -1; den *= -1; }
