@@ -77,6 +77,9 @@ public class BigRational implements Comparable<BigRational> {
     public BigRational div(BigRational other) {
         multiply(other.inverse())
     }
+    public BigRational div(int times) {
+        this.div(br(times))
+    }
     public BigRational power(int times) {
         times == 1 ? this : this.multiply(power(times-1))
     }

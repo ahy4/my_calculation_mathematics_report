@@ -94,6 +94,9 @@ public class Rational implements Comparable<Rational> {
         if (other.equals(ZERO)) return NaN;
         return multiply(other.inverse());
     }
+    public Rational div(long times) {
+        return this.div(r(times));
+    }
     public Rational power(long times) {
         Rational pow = Rational.ONE;
         for (int i = 0; i < times; i++) {

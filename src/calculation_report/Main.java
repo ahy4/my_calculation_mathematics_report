@@ -1,5 +1,7 @@
 package calculation_report;
 
+import CalculationForTest.BaseConversion;
+
 import static calculation_report.Rational.ONE;
 import static java.lang.Math.*;
 
@@ -12,7 +14,34 @@ import static calculation_report.BigRational.br;
 public class Main {
 
     public static void main(String[] args) {
+        BisectionMethod.execute(
+            BigRational.class,
+            x -> x.power(3).minus(x.multiply(3)),
+            1, 2
+        );
+    }
 
+
+    public static void testClient01() {
+        NewtonMethod.newtonMethod(
+            // f(x) = log(1+x) - 1
+            x -> myLog(x).minus(r(1)),
+            // f'(x) = 1 / (1+x)
+            x -> myLogPrime(x),
+            r(0)
+        );
+    }
+    public static void testClient02() {
+        NewtonMethod.newtonMethod(
+            // f(x) = log(1+x) - 1
+            x -> r(myLog(x).minus(r(1)).toDouble()),
+            // f'(x) = 1 / (1+x)
+            x -> r((myLogPrime(x)).toDouble()),
+            r(0)
+        );
+    }
+
+    public static void testClient03() {
         NewtonMethod.newtonMethod(
             x -> x.power(3).minus(x.multiply(3)),
             x -> x.power(2).multiply(3).minus(r(3)),
@@ -80,24 +109,6 @@ public class Main {
          * 1.1043197247885102986657372421813901899159*10^-99
          * 6.375792903780598611194877828234296739732*10^-100
          */
-    }
-    public static void testClient01() {
-        NewtonMethod.newtonMethod(
-            // f(x) = log(1+x) - 1
-            x -> myLog(x).minus(r(1)),
-            // f'(x) = 1 / (1+x)
-            x -> myLogPrime(x),
-            r(0)
-        );
-    }
-    public static void testClient02() {
-        NewtonMethod.newtonMethod(
-            // f(x) = log(1+x) - 1
-            x -> r(myLog(x).minus(r(1)).toDouble()),
-            // f'(x) = 1 / (1+x)
-            x -> r((myLogPrime(x)).toDouble()),
-            r(0)
-        );
     }
 
     public static long factorial(long n) {
