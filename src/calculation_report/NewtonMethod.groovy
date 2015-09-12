@@ -9,7 +9,7 @@ public class NewtonMethod {
     /**
      * it is max iteration count for newton method
      */
-    private static int maxIteration = 8;
+    private static int maxIteration = 4;
 
     /**
      * setter for maxIteration
@@ -38,7 +38,9 @@ public class NewtonMethod {
 
         (1..maxIteration).forEach {
             x = x - f.apply(x) / fPrime.apply(x)
-            println "NewtonMethod |  times: " + it + ", " + "answer: " + x
+//            println "NewtonMethod |  times: " + it + ", " + "answer: " + x + ", RelativeError: " + AccurateNumber.relativeErrorWithSqrt3(x)
+            println "" + it + " | " + x + " | " + AccurateNumber.relativeErrorWithSqrt3(x)
+
         }
         println ""
     }

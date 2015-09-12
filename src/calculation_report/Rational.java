@@ -1,5 +1,7 @@
 package calculation_report;
 
+import java.math.BigDecimal;
+
 /**
  * Created by noko on 2015/09/02.
  */
@@ -253,6 +255,15 @@ public class Rational implements Comparable<Rational> {
      */
     public double toDouble() {
         return (double) this.num / this.den;
+    }
+
+    /**
+     * returns a double object representing this rational value
+     * @return double value by rational.
+     *         ex. [ 1 / 2 ] -> 0.5
+     */
+    public BigDecimal toBigDecimal() {
+        return (new BigDecimal(num)).divide(new BigDecimal(den), 200, BigDecimal.ROUND_HALF_UP);
     }
 
     /**

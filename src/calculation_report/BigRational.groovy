@@ -119,6 +119,10 @@ public class BigRational implements Comparable<BigRational> {
         (double) this.num.divide(this.den)
     }
 
+    public BigDecimal toBigDecimal() {
+        (new BigDecimal(num)).divide(new BigDecimal(den), 200, BigDecimal.ROUND_HALF_UP)
+    }
+
     public BigInteger numerator() { this.num }
     public BigInteger denominator() { this.den }
 
