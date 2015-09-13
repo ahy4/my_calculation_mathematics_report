@@ -13,28 +13,10 @@ import static calculation_report.BigRational.br;
 public class Main {
 
     public static void main(String[] args) {
+        testClient03();
         testClient04();
     }
 
-
-    public static void testClient01() {
-        NewtonMethod.newtonMethod(
-            // f(x) = log(1+x) - 1
-            x -> myLog(x).minus(br(1)),
-            // f'(x) = 1 / (1+x)
-            x -> myLogPrime(x),
-            br(0)
-        );
-    }
-    public static void testClient02() {
-        NewtonMethod.newtonMethod(
-            // f(x) = log(1+x) - 1
-            x -> br(myLog(x).minus(br(1)).toDouble()),
-            // f'(x) = 1 / (1+x)
-            x -> br((myLogPrime(x)).toDouble()),
-            br(0)
-        );
-    }
 
     public static void testClient03() {
         System.out.println("［Rationalクラスによる結果］");
@@ -68,15 +50,6 @@ public class Main {
         );
     }
 
-    public static void testClient05() {
-        BisectionMethod.execute(
-            BigRational.class,
-            // f(x) = log(1+x) - 1
-            x -> myLog(x).minus(br(1)),
-            1, 2
-        );
-    }
-
     public static void testClient04() {
         System.out.println("［BigRationalクラスによる結果］");
         BisectionMethod.execute(
@@ -92,43 +65,6 @@ public class Main {
             1, 2
         );
 
-    }
-
-    public static long factorial(long n) {
-        long fact = 1;
-        for (int i = 1; i <= n; i++) {
-            fact *= i;
-        }
-        return fact;
-//        return n == 0 ? 1 : n * factorial(n-1);
-    }
-
-    public static BigRational sum(NumericalSequence nth) {
-        BigRational sum = BigRational.ZERO;
-        for (int i = 1; i <= 8; i++) {
-            sum = sum.plus(nth.apply(i));
-        }
-        return sum;
-    }
-
-    // return log(1 + x) (= sum((-1)^(n+1) * x^n / n) )
-    public static BigRational myLog(BigRational x) {
-        return sum ( n ->
-                x.power(n)
-                    .multiply(br(
-                        n % 2 == 0 ? -1 : +1, // (-1)^(n+1), (int) pow(-1, n + 1)
-                        n
-                    ))
-        );
-    }
-
-    // return 1 / (1 + x)
-    public static BigRational myLogPrime(BigRational x) {
-        return x.plus(BigRational.ONE).inverse();
-    }
-
-    interface NumericalSequence {
-        BigRational apply(int n);
     }
 
 }
