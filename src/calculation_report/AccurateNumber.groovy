@@ -10,7 +10,7 @@ public class AccurateNumber {
     }
 
     public static BigDecimal relativeError(BigDecimal trueNumber, BigDecimal approximate) {
-        trueNumber.subtract(approximate).divide(trueNumber, 200, BigDecimal.ROUND_HALF_UP)
+        trueNumber.subtract(approximate).divide(trueNumber, 200, BigDecimal.ROUND_HALF_UP).abs()
     }
 
     public static BigDecimal relativeErrorWithSqrt3(BigDecimal approximate) {

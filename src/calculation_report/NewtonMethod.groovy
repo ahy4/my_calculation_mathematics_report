@@ -9,14 +9,14 @@ public class NewtonMethod {
     /**
      * it is max iteration count for newton method
      */
-    private static int maxIteration = 4;
+    private static int maxIteration = 4
 
     /**
      * setter for maxIteration
      * @param {int} n  iteration max count
      */
     public static void maxIteration(int n) {
-        maxIteration = n;
+        maxIteration = n
     }
 
     /**
@@ -36,10 +36,19 @@ public class NewtonMethod {
     public static <T> void newtonMethod(Clojure<T> f, Clojure<T> fPrime, T initialX) {
         T x = initialX
 
+        println ""
+        println "| 試行回数 | 相対誤差の桁数 | 使用データ数 | 近似値 | 相対誤差 |"
+        println "|:-|:-|:-|"
         (1..maxIteration).forEach {
             x = x - f.apply(x) / fPrime.apply(x)
 //            println "NewtonMethod |  times: " + it + ", " + "answer: " + x + ", RelativeError: " + AccurateNumber.relativeErrorWithSqrt3(x)
-            println "" + it + " | " + x + " | " + AccurateNumber.relativeErrorWithSqrt3(x)
+            println(
+                "| " + it + " | " +
+                ((int)(Math.abs(Math.log10(AccurateNumber.relativeErrorWithSqrt3(x).toDouble())))) + " | " +
+                (x.toString().replaceAll("[ ][/][ ]", "").replaceAll("[.]", "").length()) + " | " +
+                x + " | " +
+                AccurateNumber.relativeErrorWithSqrt3(x) + " |"
+            )
 
         }
         println ""

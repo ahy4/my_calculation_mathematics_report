@@ -10,7 +10,7 @@ public class BisectionMethod {
     /**
      * it is max iteration count for bisection method
      */
-    private static int maxIteration = 40;
+    private static int maxIteration = 100;
 
     /**
      * setter for maxIteration
@@ -50,7 +50,9 @@ public class BisectionMethod {
             throw new RuntimeException(e)
         }
 
-
+        println ""
+        println "| 試行回数 | 相対誤差の桁数 | 使用データ数 | 近似値 | 相対誤差 |"
+        println "|:-|:-|:-|:-|"
         (1..maxIteration).forEach {
             middle = (leftBound + rightBound) / two
             if (f.apply(leftBound) * f.apply(middle) >= zero) {
@@ -58,7 +60,15 @@ public class BisectionMethod {
             } else {
                 rightBound = middle
             }
-            println "BisectionMethod |  times: " + it + ", " + "answer: " + middle
+//            println "BisectionMethod |  times: " + it + ", " + "answer: " + middle
+            if (it == 1 || it % 10 == 0) println(
+                "| " + it + " | " +
+                ((int)(Math.abs(Math.log10(AccurateNumber.relativeErrorWithSqrt3(middle).toDouble())))) + " | " +
+                (middle.toString().replaceAll("[ ][/][ ]", "").replaceAll("[.]", "").length()) + " | " +
+                middle + " | " +
+                AccurateNumber.relativeErrorWithSqrt3(middle) + " |"
+            )
+
         }
         println ""
     }
